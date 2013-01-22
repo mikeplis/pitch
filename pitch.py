@@ -60,14 +60,22 @@ HAND_SIZE = 6
 play = True
 while(play):
     deck.reset_deck()
+    trump = -1
+    lead = -1
     for player in players:
         deck.deal_hand(HAND_SIZE, player)
-    for i in range(HAND_SIZE):
-        print('-' * 5 + 'Turn #' + str(i) + '-' * 5)
-        for player in players:
+    for turn in range(HAND_SIZE):
+        print('-' * 5 + 'Turn #' + str(turn) + '-' * 5)
+        for play, player in enumerate(players):
             random.shuffle(player.hand)
-            c = player.hand.pop()
-            print(str(player) + ' played: ' + str(c))
+            card = player.hand.pop()
+            if (turn == 0 and play == 0):
+                trump = card.suit
+            if (play == 0):
+                lead = card.suit
+            print(str(player) + ' played: ' + str(card) +
+                  ' {is_trump} {is_lead}'.format(is_trump = '*TRUMP' if card.suit == trump else '',
+                                                is_lead = '*LEAD' if card.suit == lead else ''))
             
     answer = input('Play another hand (Y/N)?: ').upper()
     while(answer.upper() != 'Y' and answer.upper() != 'N'):
@@ -76,14 +84,13 @@ while(play):
 
 """
     X 4 players (in same order) randomly play 1 card at a time, then re-deal hands
-    - 4 players play 1 card at a time (based on user input)
-    - 4 players (in rotating order) play 1 card at a time
-    - Detect trump cards
-    - Detect lead suit
-    - Check if valid play
-    - Give lead to correct player
+    X Detect trump cards
+    X Detect lead suit
+    - Check if valid play    
     - Determine winner of each turn
+    - Give lead to correct player
     - Determine winner of each round
+    - Get user input on card play
     - Take bets
     - Detect gentleman's hand
     
